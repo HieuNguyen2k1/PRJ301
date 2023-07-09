@@ -5,19 +5,24 @@
  */
 package controller;
 
+import DAO.selectDAO;
+import entity.student;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author HP
  */
-@WebServlet("/loginServlet")
-public class loginServlet extends HttpServlet {
+@WebServlet(name = "loadController", urlPatterns = {"/load"})
+public class loadController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,15 +37,16 @@ public class loginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String user = request.getParameter("user");
-            String pass = request.getParameter("password");
-               
-            if(user.equals("admin") && pass.equals("123")){
-                response.sendRedirect("loginSuccessFull.jsp");
-            }else{
-                response.sendRedirect("login.html");
-            }
-        } catch (Exception e) {
+            int x = Integer.parseInt(request.getParameter("number"));
+            selectDAO selectDAO = new selectDAO();
+            List<student> list = selectDAO.Select();
+            int a = x - 1;
+            request.setAttribute("number", a);
+            request.setAttribute("test", list);
+            request.getRequestDispatcher("student.jsp").
+                    forward(request, response);
+        } catch (Exception ex) {
+            System.out.println("loi" + ex + "loi");
         }
     }
 
@@ -57,6 +63,7 @@ public class loginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
     }
 
     /**
